@@ -27,19 +27,19 @@
 
 **Proper Set**: $A \subseteq X$ and $y \in X$ and $y \notin A$ then $A \subset X$
 
-**Complement**: $\overline{A}$ = $\{ x \mid x \in X$ and $x \notin A \}$
+**Complement**: $\overline{A} = \{ x \mid x \in X \text{ and } x \notin A \}$
 
 - $\overline{\overline{A}}$ = $A$
 - $\overline{EmptySet}$ = $X$
 - $\overline{X} = EmptySet$
 
-**Union** $A \cup B = \{x \mid x \in A$ or $x \in B \}$
+**Union** $A \cup B = \{x \mid x \in A \text{ or } x \in B \}$
 
 - $A \cup X = X$
 - $A \cup EmptySet = A$
 - $A \cup \overline{A} = X$
 
-**Intersection**: $A \cap B = \{ x \mid x \in A$ and $ x \in B \}$
+**Intersection**: $A \cap B = \{ x \mid x \in A \text{ and } x \in B \}$
 
 - $A \cap X = A$
 - $A \cap EmptySet = EmptySet$
