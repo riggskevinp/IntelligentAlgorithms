@@ -179,7 +179,7 @@ Overall Implied Fuzzy Set B' = $B_1' \cup B_2' \cup \dots \cup B_P' = (A_1' \tim
 |||
 |---|---|
 |OIFS|$\mu_{B'}(y)$|
-|$\cup $ (max)|$\bigvee_{k=1}^{P}$|
+|$\cup$ (max)|$\bigvee_{k=1}^{P}$|
 |Cylindrical Extension of $A_1' \times A_2' \times \dots \times A_N'$|$\mu_{c(A')}(x_1,x_2,\dots,x_N)$|
 |Rule k, A coupled with B, $k=1,2,\dots,P$|$(\prod_{i=1}^{N} \mu_{A_i}^{k}(x_i))* \mu_{B}^{k}(y)$|
 |Max-product composition of $R_i$|$\bigvee_{(X_1,X_2,\dots,X_N)}[\mu_{c(A')}(x_1,x_2,\dots,x_N) * (\prod_{i=1}^{N} \mu_{A_i}^{k}(x_i))* \mu_{B}^{k}(y)]$|
@@ -196,7 +196,7 @@ $\mu_{B'}(y) = \bigvee_{k=1}^{P} \{ \prod_{i=1}^{N}[ \mu_{A_i}^{k}(x_i)]* \mu_{B
 |||
 |---|---|
 |OIFS|$\mu_{B'}(y)$|
-|$\cup $ (max)|$\bigvee_{k=1}^{P}$|
+|$\cup$ (max)|$\bigvee_{k=1}^{P}$|
 |Cylindrical Extension of $A_1' \times A_2' \times \dots \times A_N'$|$\mu_{c(A')}(x_1,x_2,\dots,x_N)$|
 |Rule k, A coupled with B, $k=1,2,\dots,P$|$[\bigwedge_{i=1}^{N} \mu_{A_i}^{k}(x_i)] \wedge \mu_{B}^{k}(y)$|
 |Max-product composition of $R_i$|$\bigvee_{(X_1,X_2,\dots,X_N)}[\mu_{c(A')}(x_1,x_2,\dots,x_N) \wedge [\bigwedge_{i=1}^{N} \mu_{A_i}^{k}(x_i)] \wedge \mu_{B}^{k}(y)]$|
