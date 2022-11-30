@@ -83,6 +83,32 @@ An **N-ary Fuzzy Relation** is a fuzzy set defined a Cartesian product space whe
 * A coupled with B is a mapping rule
 * A entails B is an implication rule
 
+## A coupled with B implication examples
+* Employs the Triangular norm: $R=A \text{ -> }B = A \cap B = \int_{X \times Y}\mu_R(x,y)/(x,y)$ where $\mu_R(x,y) = T[\mu_A(x),\mu_B(y)]$
 
+|T-Norm Name|T-Norm Operator|
+|---|---|
+|Min (Mamdani)|$\mu_{R_m}(x,y) = \mu_A(x)$^$\mu_B(y)$|
+|Algebraic Product|$\mu_{R_p}(x,y) = \mu_A(x) * \mu_B(y)$|
+|Bounded Product|$\mu_{R_{bp}}(x,y) = 0$ v $[\mu_A(x) + \mu_B(y) - 1]$|
+|Drastic Product|$\mu_{R_{dp}}(x,y) \mu_A(x) * \mu_B(y)$; a*b == {a if b = 1;b if a = 1; 0 otherwise}|
+
+
+## A entails B implication examples
+* $R = A -> B = \int_{X \times Y}\mu_R(x,y)/(x,y)$
+* Utilizes both T and S norms
+
+### Example Implication Relations (Tautologies)
+* Material Implication $\overline{A} \cup B$: $\mu_R(x,y) = S[[1-\mu_A(x)], \mu_B(y)]$
+* Propositional Calculus $\overline{A} \cup (A \cap B)$: $\mu_R(x,y) = S[[1 - \mu_A(x)],T[\mu_A(x),\mu_B(y)]]$
+* Generalization of Modus Ponens $A \times sup(c), c \subseteq B$: $\mu_R(x,y) = sup\{c \mid [\mu_A(x),c] \le \mu_B(y), 0 \le c \le 1\}$
+
+### Example T/S-norm Implementations
+|||
+|---|---|
+|Zadeh's Arithmetic rule: bounded sum|$\mu_{R_a} = 1$ ^ $[1 - \mu_A(x) + \mu_B(y)]$|
+|Boolean Fuzzy Implication|$\mu_{R_s}(x,y) = [1 - \mu_A(x)]$ v $\mu_B(y)$|
+|Zadeh's max-min rule|$\mu_{R_{mm}} = [1 - \mu_A(x)]$ v $[\mu_A(x)$ ^ $\mu_B(y)]$|
+|Goguen's Fuzzy Implication|$\mu_{R_{\Delta}} = [\mu_A(x) <_?  \mu_B(y)]; a <_? b = 1 \text{ if } a \le b, b/a \text{ if } a > b$|
 
 [Part4](../Part4/Part4.md)
