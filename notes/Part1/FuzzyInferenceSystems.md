@@ -1,12 +1,4 @@
-# Intelligent Algorithms
-
-## Simplified Representation of an Intelligent Algorithm
-- Derivative free: Genetic Algorithms, Particle Swarm Optimization, Ant Colony Optimization
-- Derivative/Gradient Based: Least Squares, Newtonian
-
-![IA Model](IntelligentAlgorithmBlocks.JPG)
-
-## Fuzzy Inference Systems
+# Fuzzy Inference Systems
 
 ![IA Model](FuzzyInferenceSystems.JPG)
 
@@ -120,3 +112,53 @@ $\mu_A(x) = 1 - \mu_A(x)$
 
 ![Close to zero](CloseToZero.JPG)
 
+### Membership Functions
+
+#### Triangle Membership Function: a,b,c
+
+$y = triangle(x,a,b,c) = max(min(\frac{x-a}{b-a}, \frac{c-x}{c-b}),0)$
+|||
+|---|---|
+|0| if $c < x < a$|
+|$\frac{x-a}{b-a}$|if $a \le x \le b$|
+|$\frac{c-x}{c-b}$|if $b < x \le c$|
+
+![Triangle MF](TriangleMF.JPG)
+
+#### Trapezoidal Membership Function
+
+$y = trapezoid(x,a,b,c,d) = max(min(\frac{x-a}{b-a},1,\frac{d-x}{d-c}),0)$
+- If b = c, we get a triangle
+
+|||
+|---|---|
+|0| if $d < x < a$|
+|$\frac{x-a}{b-a}$|if $a \le x < b$|
+|1|if $b \le x < c$|
+|$\frac{d-x}{d-c}$|if $c \le x$|
+
+![Trapezoidal MF](TrapezoidalMF.JPG)
+
+#### Gaussian Membership Function; parameters : center and spread, c and $\sigma$
+
+$y = gaussian(x,c,\sigma) = e^{-\frac{1}{2}(\frac{x-c}{\sigma})^{2}}$
+
+![Gaussian MF](GaussianMF.JPG)
+
+#### Generalized Bell
+
+- $b < 0$ represents an upside down bell
+
+$y = gbell(x,a,b,c) = [1 + |\frac{x-c}{a}|^{2b}]^{-1}$
+
+![Generalized Bell MF](GeneralizedBellMF.JPG)
+
+#### Sigmoidal Membership Function:
+
+- Common in neural networks
+
+$y = sig(x,a,c) = \frac{1}{1 + e^{-a(x-c)}}$
+
+![Sigmoidal MF](SigmoidalMF.JPG)
+
+[Part 2](../Part2/Part2.md)
