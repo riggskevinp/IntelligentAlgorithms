@@ -209,3 +209,4 @@ Like simplified PIE, apply fuzzy singleton fuzzification to MIE
 
 $\mu_{B'}(y) = \bigvee_{k=1}^{P} \{ [\bigwedge_{i=1}^{N} \mu_{A_i}^{k}(x_i)] \wedge \mu_{B}^{k}(y) \}$
 
+[Part5](../Part5/Part5.md)

@@ -28,7 +28,7 @@
 * Fuzzy Reasoning
 * Fuzzy Inference Engine
 
-## [Part 5]()
+## [Part 5](notes/Part5/Part5.md)
 * Defuzzification
 * Fuzzy Inference Systems
 * Approximate Inference Systems

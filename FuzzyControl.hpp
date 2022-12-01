@@ -1,6 +1,7 @@
 #pragma once
-#include<algorithm>
-#include<iostream>
+#include <algorithm>
+#include <iostream>
+#include <memory>
 
 class MembershipFunction{
 public:
@@ -68,5 +69,5 @@ public:
     FuzzySet(MembershipFunction* _mf):mf(_mf){}
 
 private:
-    std::unique_ptr<MembershipFunction> mf;
+    std::shared_ptr<MembershipFunction> mf;
 };
