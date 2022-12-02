@@ -63,9 +63,13 @@ TEST(FuzzySet, Sigmoidal) {
 
 TEST(InferenceEngines, Simplified_PIE_with_CA){
     // Input Variable
-    auto cold = FuzzySet(new TriangleMF(-0.0001,0,30));
-    auto cool = FuzzySet(new TriangleMF(0,20,70));
-    auto warm = FuzzySet(new TriangleMF(40,70,std::numeric_limits<double>::max()));
+    auto cold = new FuzzySet(new TriangleMF(-0.0001,0,30));
+    auto cool = new FuzzySet(new TriangleMF(0,20,70));
+    auto warm = new FuzzySet(new TriangleMF(40,70,std::numeric_limits<double>::max()));
+    Fuzzifier temp;
+    temp.addValue(cold);
+    temp.addValue(cool);
+    temp.addValue(warm);
 
     // Output Variable
     auto fast = FuzzySet(new TriangleMF(70,80,90));
@@ -79,7 +83,9 @@ TEST(InferenceEngines, Simplified_PIE_with_CA){
     SimplifiedPIECA fc({ifTempIsColdThenFanIsFast,
                         ifTempICoolThenFanIsMedium,
                         ifTempIsWarmThenFanIsSlow,
-    });
+                        },
+                       {temp}
+    );
 
     EXPECT_DOUBLE_EQ(fc.fuzzDefuzz({0}), 80.0);
     EXPECT_DOUBLE_EQ(fc.fuzzDefuzz({35}), 60.0);
@@ -89,14 +95,22 @@ TEST(InferenceEngines, Simplified_PIE_with_CA){
 
 TEST(InferenceEngines, Simplified_MIE_with_CA_MultiIn){
     // Input Variable
-    auto cold = FuzzySet(new TriangleMF(std::numeric_limits<int>::min(),0,30));
-    auto cool = FuzzySet(new TriangleMF(-10,20,50));
-    auto warm = FuzzySet(new TriangleMF(10,40,std::numeric_limits<int>::max()));
+    auto cold = new FuzzySet(new TriangleMF(std::numeric_limits<int>::min(),0,30));
+    auto cool = new FuzzySet(new TriangleMF(-10,20,50));
+    auto warm = new FuzzySet(new TriangleMF(10,40,std::numeric_limits<int>::max()));
+    Fuzzifier temp;
+    temp.addValue(cold);
+    temp.addValue(cool);
+    temp.addValue(warm);
 
     // Input Variable
-    auto dark = FuzzySet(new TriangleMF(std::numeric_limits<int>::min(),10,40));
-    auto overcast = FuzzySet(new TriangleMF(10,40,70));
-    auto sunny = FuzzySet(new TriangleMF(40,70,std::numeric_limits<int>::max()));
+    auto dark = new FuzzySet(new TriangleMF(std::numeric_limits<int>::min(),10,40));
+    auto overcast = new FuzzySet(new TriangleMF(10,40,70));
+    auto sunny = new FuzzySet(new TriangleMF(40,70,std::numeric_limits<int>::max()));
+    Fuzzifier sunExposure;
+    sunExposure.addValue(dark);
+    sunExposure.addValue(overcast);
+    sunExposure.addValue(sunny);
 
     // Output Variable
     auto fast = FuzzySet(new TriangleMF(70,80,90));
@@ -110,7 +124,9 @@ TEST(InferenceEngines, Simplified_MIE_with_CA_MultiIn){
     SimplifiedMIECA fc({rule1,
                         rule2,
                         rule3,
-                        });
+                        },
+                       {temp,sunExposure}
+    );
 
     /*for(int i = -5; i < 100; i++){
         for(int j = -5; j < 100; j++){
@@ -121,18 +137,30 @@ TEST(InferenceEngines, Simplified_MIE_with_CA_MultiIn){
 
 TEST(InferenceEngines, InvertedPendulum){
     // Input Linguistic Variable "error"
-    auto negativeLargeError = FuzzySet(new TriangleMF(std::numeric_limits<int>::min(), -M_PI/2, -M_PI/4));
-    auto negativeSmallError = FuzzySet(new TriangleMF(-M_PI/2, -M_PI/4,0));
-    auto zeroError = FuzzySet(new TriangleMF(-M_PI/4,0, M_PI/4));
-    auto positiveSmallError = FuzzySet(new TriangleMF(0, M_PI/4, M_PI/2));
-    auto positiveLargeError = FuzzySet(new TriangleMF(M_PI/4, M_PI/2, std::numeric_limits<int>::max()));
+    auto negativeLargeError = new FuzzySet(new TriangleMF(std::numeric_limits<int>::min(), -M_PI/2, -M_PI/4));
+    auto negativeSmallError = new FuzzySet(new TriangleMF(-M_PI/2, -M_PI/4,0));
+    auto zeroError = new FuzzySet(new TriangleMF(-M_PI/4,0, M_PI/4));
+    auto positiveSmallError = new FuzzySet(new TriangleMF(0, M_PI/4, M_PI/2));
+    auto positiveLargeError = new FuzzySet(new TriangleMF(M_PI/4, M_PI/2, std::numeric_limits<int>::max()));
+    Fuzzifier errorVar;
+    errorVar.addValue(negativeLargeError);
+    errorVar.addValue(negativeSmallError);
+    errorVar.addValue(zeroError);
+    errorVar.addValue(positiveSmallError);
+    errorVar.addValue(positiveLargeError);
 
     // Input Linguistic Variable "change in error"
-    auto negativeLargeErrorDelta = FuzzySet(new TriangleMF(std::numeric_limits<int>::min(), -M_PI/2, -M_PI/4));
-    auto negativeSmallErrorDelta = FuzzySet(new TriangleMF(-M_PI/2, -M_PI/4,0));
-    auto zeroErrorDelta = FuzzySet(new TriangleMF(-M_PI/4,0, M_PI/4));
-    auto positiveSmallErrorDelta = FuzzySet(new TriangleMF(0, M_PI/4, M_PI/2));
-    auto positiveLargeErrorDelta = FuzzySet(new TriangleMF(M_PI/4, M_PI/2, std::numeric_limits<int>::max()));
+    auto negativeLargeErrorDelta = new FuzzySet(new TriangleMF(std::numeric_limits<int>::min(), -M_PI/2, -M_PI/4));
+    auto negativeSmallErrorDelta = new FuzzySet(new TriangleMF(-M_PI/2, -M_PI/4,0));
+    auto zeroErrorDelta = new FuzzySet(new TriangleMF(-M_PI/4,0, M_PI/4));
+    auto positiveSmallErrorDelta = new FuzzySet(new TriangleMF(0, M_PI/4, M_PI/2));
+    auto positiveLargeErrorDelta = new FuzzySet(new TriangleMF(M_PI/4, M_PI/2, std::numeric_limits<int>::max()));
+    Fuzzifier errorChange;
+    errorChange.addValue(negativeLargeErrorDelta);
+    errorChange.addValue(negativeSmallErrorDelta);
+    errorChange.addValue(zeroErrorDelta);
+    errorChange.addValue(positiveSmallErrorDelta);
+    errorChange.addValue(positiveLargeErrorDelta);
 
 
     // Output Linguistic Variable "control force"
@@ -143,68 +171,39 @@ TEST(InferenceEngines, InvertedPendulum){
     auto positiveLargeControl = FuzzySet(new TriangleMF(10,20,30));
 
 
-    auto rule1 = FuzzyRule({negativeLargeError,negativeLargeErrorDelta},positiveLargeControl);
-    auto rule2 = FuzzyRule({negativeLargeError,negativeSmallError},positiveLargeControl);
-    auto rule3 = FuzzyRule({negativeLargeError,zeroErrorDelta},positiveLargeControl);
-    auto rule4 = FuzzyRule({negativeLargeError,positiveSmallErrorDelta},positiveSmallControl);
-    auto rule5 = FuzzyRule({negativeLargeError,positiveLargeErrorDelta},zeroControl);
+    SumProdIECoA fc = SumProdIECoA({FuzzyRule({negativeLargeError,negativeLargeErrorDelta},positiveLargeControl),
+                                         FuzzyRule({negativeLargeError,negativeSmallErrorDelta},positiveLargeControl),
+                                         FuzzyRule({negativeLargeError,zeroErrorDelta},positiveLargeControl),
+                                         FuzzyRule({negativeLargeError,positiveSmallErrorDelta},positiveSmallControl),
+                                         FuzzyRule({negativeLargeError,positiveLargeErrorDelta},zeroControl),
 
-    auto rule6 = FuzzyRule({negativeSmallError,negativeLargeErrorDelta},positiveLargeControl);
-    auto rule7 = FuzzyRule({negativeSmallError,negativeSmallError},positiveLargeControl);
-    auto rule8 = FuzzyRule({negativeSmallError,zeroErrorDelta},positiveSmallControl);
-    auto rule9 = FuzzyRule({negativeSmallError,positiveSmallErrorDelta},zeroControl);
-    auto rule10 = FuzzyRule({negativeSmallError,positiveLargeErrorDelta},negativeSmallControl);
+                                         FuzzyRule({negativeSmallError,negativeLargeErrorDelta},positiveLargeControl),
+                                         FuzzyRule({negativeSmallError,negativeSmallErrorDelta},positiveLargeControl),
+                                         FuzzyRule({negativeSmallError,zeroErrorDelta},positiveSmallControl),
+                                         FuzzyRule({negativeSmallError,positiveSmallErrorDelta},zeroControl),
+                                         FuzzyRule({negativeSmallError,positiveLargeErrorDelta},negativeSmallControl),
 
-    auto rule11 = FuzzyRule({zeroError,negativeLargeErrorDelta},positiveLargeControl);
-    auto rule12 = FuzzyRule({zeroError,negativeSmallError},positiveSmallControl);
-    auto rule13 = FuzzyRule({zeroError,zeroErrorDelta},zeroControl);
-    auto rule14 = FuzzyRule({zeroError,positiveSmallErrorDelta},negativeSmallControl);
-    auto rule15 = FuzzyRule({zeroError,positiveLargeErrorDelta},negativeLargeControl);
+                                         FuzzyRule({zeroError,negativeLargeErrorDelta},positiveLargeControl),
+                                         FuzzyRule({zeroError,negativeSmallErrorDelta},positiveSmallControl),
+                                         FuzzyRule({zeroError,zeroErrorDelta},zeroControl),
+                                         FuzzyRule({zeroError,positiveSmallErrorDelta},negativeSmallControl),
+                                         FuzzyRule({zeroError,positiveLargeErrorDelta},negativeLargeControl),
 
-    auto rule16 = FuzzyRule({positiveSmallError,negativeLargeErrorDelta},positiveSmallControl);
-    auto rule17 = FuzzyRule({positiveSmallError,negativeSmallError},zeroControl);
-    auto rule18 = FuzzyRule({positiveSmallError,zeroErrorDelta},negativeSmallControl);
-    auto rule19 = FuzzyRule({positiveSmallError,positiveSmallErrorDelta},negativeLargeControl);
-    auto rule20 = FuzzyRule({positiveSmallError,positiveLargeErrorDelta},negativeLargeControl);
+                                         FuzzyRule({positiveSmallError,negativeLargeErrorDelta},positiveSmallControl),
+                                         FuzzyRule({positiveSmallError,negativeSmallErrorDelta},zeroControl),
+                                         FuzzyRule({positiveSmallError,zeroErrorDelta},negativeSmallControl),
+                                         FuzzyRule({positiveSmallError,positiveSmallErrorDelta},negativeLargeControl),
+                                         FuzzyRule({positiveSmallError,positiveLargeErrorDelta},negativeLargeControl),
 
-    auto rule21 = FuzzyRule({positiveLargeError,negativeLargeErrorDelta},zeroControl);
-    auto rule22 = FuzzyRule({positiveLargeError,negativeSmallError},positiveSmallControl);
-    auto rule23 = FuzzyRule({positiveLargeError,zeroErrorDelta},negativeLargeControl);
-    auto rule24 = FuzzyRule({positiveLargeError,positiveSmallErrorDelta},negativeLargeControl);
-    auto rule25 = FuzzyRule({positiveLargeError,positiveLargeErrorDelta},negativeLargeControl);
-
-
-    SumProdIECoA fc = SumProdIECoA({
-        FuzzyRule({negativeLargeError,negativeLargeErrorDelta},positiveLargeControl),
-        FuzzyRule({negativeLargeError,negativeSmallError},positiveLargeControl),
-        FuzzyRule({negativeLargeError,zeroErrorDelta},positiveLargeControl),
-        FuzzyRule({negativeLargeError,positiveSmallErrorDelta},positiveSmallControl),
-        FuzzyRule({negativeLargeError,positiveLargeErrorDelta},zeroControl),
-
-        FuzzyRule({negativeSmallError,negativeLargeErrorDelta},positiveLargeControl),
-        FuzzyRule({negativeSmallError,negativeSmallError},positiveLargeControl),
-        FuzzyRule({negativeSmallError,zeroErrorDelta},positiveSmallControl),
-        FuzzyRule({negativeSmallError,positiveSmallErrorDelta},zeroControl),
-        FuzzyRule({negativeSmallError,positiveLargeErrorDelta},negativeSmallControl),
-
-        FuzzyRule({zeroError,negativeLargeErrorDelta},positiveLargeControl),
-        FuzzyRule({zeroError,negativeSmallError},positiveSmallControl),
-        FuzzyRule({zeroError,zeroErrorDelta},zeroControl),
-        FuzzyRule({zeroError,positiveSmallErrorDelta},negativeSmallControl),
-        FuzzyRule({zeroError,positiveLargeErrorDelta},negativeLargeControl),
-
-        FuzzyRule({positiveSmallError,negativeLargeErrorDelta},positiveSmallControl),
-        FuzzyRule({positiveSmallError,negativeSmallError},zeroControl),
-        FuzzyRule({positiveSmallError,zeroErrorDelta},negativeSmallControl),
-        FuzzyRule({positiveSmallError,positiveSmallErrorDelta},negativeLargeControl),
-        FuzzyRule({positiveSmallError,positiveLargeErrorDelta},negativeLargeControl),
-
-        FuzzyRule({positiveLargeError,negativeLargeErrorDelta},zeroControl),
-        FuzzyRule({positiveLargeError,negativeSmallError},positiveSmallControl),
-        FuzzyRule({positiveLargeError,zeroErrorDelta},negativeLargeControl),
-        FuzzyRule({positiveLargeError,positiveSmallErrorDelta},negativeLargeControl),
-        FuzzyRule({positiveLargeError,positiveLargeErrorDelta},negativeLargeControl)
-    });
+                                         FuzzyRule({positiveLargeError,negativeLargeErrorDelta},zeroControl),
+                                         FuzzyRule({positiveLargeError,negativeSmallErrorDelta},positiveSmallControl),
+                                         FuzzyRule({positiveLargeError,zeroErrorDelta},negativeLargeControl),
+                                         FuzzyRule({positiveLargeError,positiveSmallErrorDelta},negativeLargeControl),
+                                         FuzzyRule({positiveLargeError,positiveLargeErrorDelta},negativeLargeControl)
+                                        },
+                                   {errorVar,
+                                    errorChange}
+    );
 
     for(int x = -2; x <= 2; x++){
         for(int y = -2; y <= 2; y++){

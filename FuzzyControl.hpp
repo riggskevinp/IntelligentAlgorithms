@@ -4,6 +4,7 @@
 #include <memory>
 #include <utility>
 #include <numeric>
+#include <vector>
 
 template <typename T>
 struct fail : std::false_type
@@ -95,6 +96,7 @@ public:
     double center() {return mf->center();}
     double area() {return mf->area();}
     void fuzzify(double crispInput){fuzzValue = mf->getValue(crispInput);}
+    double getFuzzyValue(){return fuzzValue;}
 
 private:
     std::shared_ptr<MembershipFunction> mf;
@@ -104,40 +106,59 @@ private:
 
 class FuzzyRule{
 public:
-    explicit FuzzyRule(std::vector<FuzzySet> _in, FuzzySet _out): in(std::move(_in)),out(std::move(_out)){}
-    std::vector<double> getWeights(std::vector<double> crispIn){
+    explicit FuzzyRule(std::vector<FuzzySet*> _in, FuzzySet _out): in(std::move(_in)),out(std::move(_out)){}
+    std::vector<double> getWeights(){
         std::vector<double> _weights;
-        _weights.reserve(crispIn.size());
-        for(int i = 0; i < crispIn.size(); i++){
-            _weights.push_back(in.at(i)(crispIn.at(i)));
+        _weights.reserve(in.size());
+        for(auto set : in){
+            _weights.push_back(set->getFuzzyValue());
         }
         return _weights;
     }
     double getCenter(){return out.center();}
     double getArea(){return out.area();}
 private:
-    std::vector<FuzzySet> in;
+    std::vector<FuzzySet*> in;
     FuzzySet out;
+};
+
+class Fuzzifier{
+public:
+    void addValue(FuzzySet* _in){inputs.push_back(_in);}
+    void fuzz(double crispInput){
+        for(auto input : inputs){
+            input->fuzzify(crispInput);
+        }
+    }
+private:
+    std::vector<FuzzySet*> inputs;
 };
 
 class SimplifiedIEwCA{
 public:
-    explicit SimplifiedIEwCA(std::vector<FuzzyRule> _rules):rules(std::move(_rules)){}
+    explicit SimplifiedIEwCA(std::vector<FuzzyRule> _rules, std::vector<Fuzzifier> _fuzzer):rules(std::move(_rules)), inputFuzzers(std::move(_fuzzer)){}
 
 protected:
+    void fuzzify(const std::vector<double>& crispInputs){
+        for(int i = 0; i < inputFuzzers.size(); i++){
+            inputFuzzers.at(i).fuzz(crispInputs.at(i));
+        }
+    }
     std::vector<FuzzyRule> rules;
+    std::vector<Fuzzifier> inputFuzzers;
 };
 
 
 class SimplifiedPIECA: public SimplifiedIEwCA{
 public:
-    explicit SimplifiedPIECA(std::vector<FuzzyRule> _rules):SimplifiedIEwCA(std::move(_rules)){}
+    explicit SimplifiedPIECA(std::vector<FuzzyRule> _rules, std::vector<Fuzzifier> _fuzzer):SimplifiedIEwCA(std::move(_rules),std::move(_fuzzer)){}
 
     double fuzzDefuzz(const std::vector<double>& crispInputs){
+        fuzzify(crispInputs);
         double num = 0;
         double den = 0;
         for(auto rule : rules){
-            auto weights = rule.getWeights(crispInputs);
+            auto weights = rule.getWeights();
             double weight = std::accumulate(weights.begin(), weights.end(), 1.0, std::multiplies<>());
             den += weight;
             num += weight*rule.getCenter();
@@ -151,13 +172,14 @@ public:
 
 class SimplifiedMIECA: public SimplifiedIEwCA{
 public:
-    explicit SimplifiedMIECA(std::vector<FuzzyRule> _rules):SimplifiedIEwCA(std::move(_rules)){}
+    explicit SimplifiedMIECA(std::vector<FuzzyRule> _rules, std::vector<Fuzzifier> _fuzzer):SimplifiedIEwCA(std::move(_rules),std::move(_fuzzer)){}
 
     double fuzzDefuzz(const std::vector<double>& crispInputs){
+        fuzzify(crispInputs);
         double num = 0;
         double den = 0;
         for(auto rule : rules){
-            auto weights = rule.getWeights(crispInputs);
+            auto weights = rule.getWeights();
             double weight = *(std::max_element(weights.begin(),weights.end()));
             den += weight;
             num += weight*rule.getCenter();
@@ -168,13 +190,14 @@ public:
 
 class SumProdIECoA: public SimplifiedIEwCA{
 public:
-    explicit SumProdIECoA(std::vector<FuzzyRule> _rules):SimplifiedIEwCA(std::move(_rules)){}
+    explicit SumProdIECoA(std::vector<FuzzyRule> _rules, std::vector<Fuzzifier> _fuzzer):SimplifiedIEwCA(std::move(_rules),std::move(_fuzzer)){}
 
     double fuzzDefuzz(const std::vector<double>& crispInputs){
+        fuzzify(crispInputs);
         double num = 0;
         double den = 0;
         for(auto rule : rules){
-            auto weights = rule.getWeights(crispInputs);
+            auto weights = rule.getWeights();
             double weight = std::accumulate(weights.begin(), weights.end(), 1.0, std::multiplies<>());
             den += weight*rule.getArea();
             num += weight*rule.getArea()*rule.getCenter();
